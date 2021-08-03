@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>Contacts</title>
+</head>
+<body>
+
+<div class="row" style="margin-left: 30%; margin-right: 30%; margin-top: 3em">
+    <div class="row">
+
+        <div class="col s6"><a class=" waves-effect waves-light btn" href="../form">
+            <i class="material-icons left">add</i>Add contact</a>
+        </div>
+
+        <div class="col s6">
+            <form th:action="@{/contacts/search}" method="post">
+                <input type="text" class="" id="search" name="searchName" placeholder="search ...">
+                 <button type="submit" th:href="'contacts/search/' " class="search">search</button>
+            </form>
+        </div>
+
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="contact: ${contacts}">
+            <td><a th:href="'/contact-info/'+ ${contact.id}">
+                <span th:text="${contact.firstName}"></span>
+            </a></td>
+            <td><a th:href="'/contact-info/'+ ${contact.id}">
+                <span th:text="${contact.lastName}"></span>
+            </a></td>
+            <td>
+                <a th:href="'/delete/'+ ${contact.id}">
+                    <i class="material-icons waves-light red-text">delete</i>
+                </a>
+                <a th:href="'/edit/'+ ${contact.id}">
+                    <i class="material-icons blue-text">edit</i>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+
+    </table>
+
+</div>
+
+
+
+<!--<a href="./form" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i>Add-->
+<!--    contact</a>-->
+
+<!--<div class="col s6">-->
+<!--    <form th:action="@{/contacts/search}" method="post">-->
+<!--&lt;!&ndash;        <label for="search">Search</label>&ndash;&gt;-->
+<!--        <input class="searchByName" id="search" name="searchName" placeholder="search ...">-->
+
+<!--        <button th:href="'contacts/search/' " class="search">-->
+<!--            search-->
+<!--        </button>-->
+
+<!--    </form>-->
+<!--</div>-->
+
+<!--<ul class="collection with-header">-->
+<!--    <li class="collection-header"><h6>Contacts</h6></li>-->
+<!--    <li class="collection-item" th:each="contact: ${contacts}">-->
+<!--        <a th:text="${contact.firstName} + ' ' + ${contact.lastName}" th:href="'contact-info/' + ${contact.id}"></a>-->
+<!--        <div style="padding-bottom: 20px">-->
+<!--            <a th:href="'edit/' + ${contact.id}" class="secondary-content">-->
+<!--                <i class="material-icons">edit</i>-->
+<!--            </a>-->
+<!--            <a th:href="'delete/' + ${contact.id}" class="secondary-content">-->
+<!--                <i class="material-icons">delete</i>-->
+<!--            </a>-->
+<!--        </div>-->
+<!--    </li>-->
+<!--</ul>-->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
