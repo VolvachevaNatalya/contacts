@@ -26,13 +26,9 @@ public class ContactRestController {
     }
 
     @PostMapping("/contact")
-    @ResponseStatus(HttpStatus.OK)
-    public void saveContact(@RequestBody Contact contact) {
-
-        if (contact.getId() > 0)
-            service.editContact(contact.getFirstName(), contact.getLastName(), contact.getAge(), contact.getId());
-        else
-            service.addContact(contact.getFirstName(), contact.getLastName(), contact.getAge());
+    @ResponseStatus(HttpStatus.CREATED)
+    public void saveContact(@RequestBody ContactToDisplayDto contactToDisplayDto) {
+        service.addContact(contactToDisplayDto.getFirstName(), contactToDisplayDto.getLastName(), contactToDisplayDto.getAge());
     }
 
     @GetMapping("/contact")
@@ -46,31 +42,24 @@ public class ContactRestController {
     }
 
     @GetMapping("/contact/search")
-    public Collection<Contact> getContacts(@RequestParam(required = false) String firstNameContains) {
-        return service.searchByName(firstNameContains);
+    public List<ContactToDisplayDto> getContacts(@RequestParam(required = false) String firstNameContains) {
+        return service.searchByName(firstNameContains)
+                .stream()
+                .map(contact -> contactMapper.toDto(contact))
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/contact/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ContactToDisplayDto getContactById(@PathVariable(name = "id") int contactId) {
-        Contact contact = service.getAllContacts()
-                .stream()
-                .filter(contact1 -> contact1.getId() == contactId)
-                .findFirst()
-                .get();
-
+        Contact contact = service.getById(contactId);
         return contactMapper.toDto(contact);
     }
 
     @ResponseBody
     @PutMapping("/contact/{id}")
-    public Contact editContact(@PathVariable(name = "id") int contactId, @RequestBody ContactToDisplayDto contactToDisplayDto) {
-
-        Contact contact = service.getById(contactId);
-        contact.setFirstName(contactToDisplayDto.getFirstName());
-        contact.setLastName(contactToDisplayDto.getLastName());
-        contact.setAge(contactToDisplayDto.getAge());
-        return contact;
+    public void editContact(@PathVariable(name = "id") int contactId, @RequestBody ContactToDisplayDto contactToDisplayDto) {
+        service.editContact(contactToDisplayDto.getFirstName(), contactToDisplayDto.getLastName(), contactToDisplayDto.getAge(), contactId);
     }
 
     @DeleteMapping("/contact/{id}")
